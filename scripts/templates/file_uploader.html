@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<title>File Uploader</title>
+		{% load staticfiles %}		
+		<link rel="stylesheet" type="text/css" href="{% static 'scripts/css/common.css' %}" />
+    
+    	<script type="text/javascript" src="{% static 'scripts/js/jquery-1.11.2.js' %}"></script>
+	</head>
+	
+	<body>
+	
+	<div id="pMain">
+	
+	<div id="topLine">
+		<div id="leftTop" class="fLeft">
+			<h1>File Uploader</h1>
+		</div>
+	
+		<div id="rightTop" class="fRight">
+			<a href="/scriptpile/scripts/">
+			<img src="{% static 'scripts/img/home_24_24.png' %}" alt="home" />
+			</a>
+		</div>
+	
+	</div>
+	
+	
+	<form action="file_uploader" method="POST" enctype="multipart/form-data">
+	    
+	    <p>
+	    	<span class="lbl">Select image to upload:</span>
+	    	<span class="field"><input type="file" name="fileToUpload" id="fileToUpload">
+	    	</span>
+    	</p>
+	    <br><br>
+	    <input type="submit" value="Upload Image" name="submit">
+	    {% csrf_token %} 
+	</form>
+	
+	</div>
+	
+	</body>
+</html>

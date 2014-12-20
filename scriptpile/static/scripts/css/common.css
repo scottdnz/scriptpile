@@ -1,0 +1,45 @@
+/* CSS Doc */
+
+#pMain {
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+p {
+  width: 100%;
+  /*        background-color: gray;   */
+}
+
+.lbl {
+  float:left;
+  width: 20%;
+}
+
+.field {
+  width: 80%;
+}
+
+#topLine {
+  width: 100%;
+  height: 50px;
+}
+
+#leftTop {
+	width: 90%;
+}
+
+.fLeft {
+	float:left;
+	
+}
+
+.fRight {
+	float:right;
+}
+
+h1 {
+	margin-top: 0px;
+	padding-top: 0px;
+}
+}

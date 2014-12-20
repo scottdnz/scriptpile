@@ -1,0 +1,61 @@
+<html>
+	<head>
+		<title>Test Form</title>
+		{% load staticfiles %}		
+		<link rel="stylesheet" type="text/css" href="{% static 'scripts/css/common.css' %}" />
+    
+    	<!-- 
+    	<script type="text/javascript" src="{% static 'scripts/js/jquery-1.11.2.js' %}"></script>
+    	 -->
+	</head>
+	
+	<body>
+	
+	<div id="pMain">
+	
+	<div id="topLine">
+		<div id="leftTop" class="fLeft">
+			<h1>Test Form</h1>
+		</div>
+	
+		<div id="rightTop" class="fRight">
+			<a href="/scriptpile/scripts/">
+			<img src="{% static 'scripts/img/home_24_24.png' %}" alt="home" />
+			</a>
+		</div>
+	
+	</div>
+	
+	<form action="test_form" method="POST" enctype="multipart/form-data">
+	    
+	    <p>
+	    	<span class="lbl">Enter first name:</span>
+	    	<span class="field"><input type="text" name="firstName" /></span>
+	    </span>
+	    </p>
+	    <br>
+	    <p>
+	    	<span class="lbl">Choose a category:</span>
+    	<span class="field">
+	    <select name="category">
+	    	<option value="category1">Category 1</option>
+	    	<option value="category2">Category 2</option>
+	    	<option value="category3">Category 3</option>
+	    </select>
+	    </span>
+	    </p>
+	    <br>
+	    <p>
+	    	<span class="lbl">Enter long text:</span>
+	    	<span class="field"><textarea name="longText"></textarea></span>
+    	</p>
+	    
+	    <input type="submit" value="Submit Me" name="submit">
+	    
+	    {% csrf_token %} 
+	</form>
+	
+	</div>
+	
+	</body>
+</html>

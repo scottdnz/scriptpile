@@ -1,0 +1,36 @@
+<html>
+	<head>
+		<title>File Uploader Confirm</title>
+		{% load staticfiles %}		
+		<link rel="stylesheet" type="text/css" href="{% static 'scripts/css/common.css' %}" />
+    
+    	<script type="text/javascript" src="{% static 'scripts/js/jquery-1.11.2.js' %}"></script>
+	</head>
+	
+	<body>
+	
+	<div id="pMain">
+	
+	<div id="topLine">
+		<div id="leftTop" class="fLeft">
+			<h1>File Uploader Confirm</h1>
+		</div>
+	
+		<div id="rightTop" class="fRight">
+			<a href="/scriptpile/scripts/">
+			<img src="{% static 'scripts/img/home_24_24.png' %}" alt="home" />
+			</a>
+		</div>
+	
+	</div>
+	
+	<!--  f_name: {{ f_name }}  -->
+	result: {{ result }}
+	
+	<a href="file_uploader">Go Back</a>
+
+	
+	</div>
+	
+	</body>
+</html>

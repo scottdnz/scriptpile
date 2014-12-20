@@ -1,0 +1,37 @@
+<html>
+	<head>
+		<title>Test Form Confirm</title>
+		{% load staticfiles %}		
+		<link rel="stylesheet" type="text/css" href="{% static 'scripts/css/common.css' %}" />
+    
+    	<!-- 
+    	<script type="text/javascript" src="{% static 'scripts/js/jquery-1.11.2.js' %}"></script>
+    	 -->
+	</head>
+	
+	<body>
+	
+	<div id="pMain">
+	
+	<div id="topLine">
+		<div id="leftTop" class="fLeft">
+			<h1>Test Form Confirm</h1>
+		</div>
+	
+		<div id="rightTop" class="fRight">
+			<a href="/scriptpile/scripts/">
+			<img src="{% static 'scripts/img/home_24_24.png' %}" alt="home" />
+			</a>
+		</div>
+	
+	</div>
+	
+	firstName: {{ firstName }}
+	<br><br>
+	category: {{ category }}
+	<br><br>
+	longText: {{ longText }}
+		
+	</div>
+	</body>
+</html>
