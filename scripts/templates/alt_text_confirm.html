@@ -27,6 +27,29 @@
 
 	result: {{ result }}
 	
+
+	
+	{% for html_f, values in html_files.items %}
+	<h2>Images found inside file: {{ html_f }}</h2>
+	<table>
+		<tr>
+			<th>Image</th>
+			<th>Alt text</th>
+			<th>Retrieved from</th>
+		</tr>
+		{% for image in values.images %}
+		<tr>
+			<td><img src="http://localhost{{ dest_dir }}/{{ image.location }}" /><br>
+			{{ image.f_name }}</td>
+			<td>{{ image.alt_text }}</td>
+			<td>{{ image.location }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+	{% endfor %}
+	
+	
+	
 	<a href="alt_text_grabber">Go Back</a>
 
 	
