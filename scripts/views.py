@@ -20,7 +20,8 @@ def alt_text_grabber(request):
         return render(request, 'alt_text_grabber.html')
     elif request.method == 'POST':
         if request.FILES.has_key('fileToUpload'):
-            resp = handle_uploaded_f(settings.MEDIA_ROOT, request.FILES['fileToUpload'])
+            resp = handle_uploaded_f(settings.MEDIA_ROOT, 
+                request.FILES['fileToUpload'])
         else:
             pass
         return render_to_response('alt_text_confirm.html', resp)

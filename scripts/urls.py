@@ -2,6 +2,7 @@ from django.conf.urls import patterns, url
 
 from scripts import views
 
+
 urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
     url(r'^alt_text_grabber$', views.alt_text_grabber, name='alt_text_grabber'),
