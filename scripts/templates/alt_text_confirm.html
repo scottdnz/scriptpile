@@ -22,34 +22,40 @@
 			</a>
 		</div>
 	
-	</div>
-	
+	</div>	
 
-	result: {{ result }}
-	
-
+	result: {{ result }}<br>
 	
 	{% for html_f, values in html_files.items %}
 	<h2>Images found inside file: {{ html_f }}</h2>
 	<table>
 		<tr>
-			<th>Image</th>
+			<th class="w400">Image Thumb</th>
 			<th>Alt text</th>
 			<th>Retrieved from</th>
 		</tr>
 		{% for image in values.images %}
 		<tr>
-			<td><img src="http://localhost{{ dest_dir }}/{{ image.location }}" /><br>
+			<td class="w400">
+			
+			{% if "http" in image.location %}
+			    <img src="{{ image.location}}" />
+		    {% else %}
+    			<img src="http://localhost{{ dest_dir }}/thumbs/{{ image.thumb_name }}" />
+			{% endif %}
+			
+			
+			<br>
 			{{ image.f_name }}</td>
 			<td>{{ image.alt_text }}</td>
-			<td>{{ image.location }}</td>
+			<td>{{ image.location}}</td>
 		</tr>
 		{% endfor %}
 	</table>
 	{% endfor %}
 	
 	
-	
+	<br>
 	<a href="alt_text_grabber">Go Back</a>
 
 	

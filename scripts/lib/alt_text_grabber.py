@@ -10,9 +10,12 @@
 .. moduleauthor:: Scott D.
 '''
 
-import requests, os, zipfile
-from bs4 import BeautifulSoup
+import os, zipfile, shutil
 import datetime as dt
+
+#import requests
+from bs4 import BeautifulSoup
+from PIL import Image
 
 
 def handle_uploaded_f(media_root, f):
@@ -32,23 +35,36 @@ def handle_uploaded_f(media_root, f):
     full_path = media_root + '/' + f.name
     dest_dir = os.path.join(media_root,  'job_' + now_sfx)
     try:
+        #Copy the zip file container
         with open(full_path, 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
-        
+        #Extract the files inside
         res = unzip_zip_arch(media_root, f.name, dest_dir)
-        
+        #Find each HTML file and parse it for images information.
         html_files = find_all_html_files(dest_dir)
-        
         for html_f in html_files.keys():
             images_info = parse_file(html_files[html_f]['path'])
             html_files[html_f]['images'] = images_info
+        #Create thumbnails from the images
+        thumbs_dir = os.path.join(dest_dir, 'thumbs')
+        if os.path.isdir(thumbs_dir):
+            shutil.rmtree(thumbs_dir)
+        
+        for html_f in html_files.keys():
+            res = make_thumbnails_for_html_f(html_files[html_f]['images'], 
+                dest_dir)
+            if not res['errors']:
+                html_files[html_f]['images'] = res['images_info']
+            else:
+                resp['result'] = '<br>'.join(res['errors'])
+            
         
         resp['html_files'] = html_files
         relative_media_dir = media_root.replace(
             '/var/www/html/py/django_projects/scriptpile','')
         resp['dest_dir'] = os.path.join(relative_media_dir,  'job_' + now_sfx)                 
-       
+  
     except Exception as exc:
         resp['result'] = 'There was a problem: ' + exc.__str__() 
     return resp
@@ -87,30 +103,65 @@ def find_all_html_files(job_dir):
     return html_files
     
     
-def make_thumbnails(images_info, output_dir):
+def make_thumbnails_for_html_f(img_list, dest_dir):
     '''
-    '''
-    size = (400, 100)
-    os.mkdir(output_dir)
     
-    for img in img_list:
-        f = os.path.join(img_dir, img)
-        fname = img[:img.rfind('.')] + '_thumb.jpg'     
-        thumb_f = os.path.join(output_dir, fname)
+     html_files dict format:
+        {'example2.htm':
+            'path': './data/two_html_data/example2.htm'
+            {'images': [
+                {'orig_height': '', 
+                'alt_text': u'alt text for image myfile', 
+                'f_name': u'myfile.jpg', 
+                'location': u'example2_files/myfile.jpg', 
+                'thumb_name': ''},
+                {'orig_height': '', 
+                'alt_text': u'alt text for image myfile2', 
+                'f_name': u'myfile2.jpg', 
+                'location': u'example2_files/myfile2.jpg', 
+                'thumb_name': ''}
+                ],
+            },
+        'example2.htm': ...
+        }
+    '''
+    res = {'errors': [],
+            'images_info': []}
+    size = (400, 100)
+    output_dir = os.path.join(dest_dir, 'thumbs')
+    if not os.path.isdir(output_dir):
+        os.mkdir(output_dir)
+    
+    
+    for i in range(0, len(img_list)):
+        if 'http' in img_list[i]['location']:
+            continue
+        img_full_path = os.path.join(dest_dir, img_list[i]['location'])
+   
+#            try:
+        im = Image.open(img_full_path)
+        (width, height) = im.size
+        if height > 100:
+            posn_last_dot = img_list[i]['f_name'].rfind('.')
+            thumb_fname = img_list[i]['f_name'][:posn_last_dot] + '_thumb.jpg'
+            thumb_f = os.path.join(output_dir, thumb_fname)
+#            print(thumb_f)
         
-        try:
-            im = Image.open(f)
-            (width, height) = im.size
-            if height > 100:
-                im.thumbnail(size)
-                im.save(thumb_f, "JPEG")
-                #images_info[]
-            else:
-                shutil.copy(f, output_dir)            
-        except IOError as exc:
-            res['errors'].append(
-                'Cannot create thumbnail for {}. Error: {}'.format(img, 
-                exc.__str__()))
+            im.thumbnail(size)
+            im.save(thumb_f, "JPEG")                
+
+            img_list[i]['thumb_name'] = thumb_fname
+        else:
+            f = os.path.join(output_dir, img_list[i]['f_name'])
+            shutil.copy(img_full_path, output_dir)
+            img_list[i]['thumb_name'] = os.path.basename(img_list[i]['f_name'])
+                                
+#            except IOError as exc:
+#                res['errors'].append(
+#                    'Cannot create thumbnail for {}. Error: {}'.format(img, 
+#                    exc.__str__()))
+    res['images_info'] = img_list    
+    return res
 
 
 # Functions for parsing HTML ##################################################
