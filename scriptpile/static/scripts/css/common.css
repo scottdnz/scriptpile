@@ -1,9 +1,23 @@
 /* CSS Doc */
 
+body {
+  background-color: #f2f2f2;
+}
+
 #pMain {
   width: 960px;
   margin-left: auto;
   margin-right: auto;
+  background-color: #ffffff;
+  font-family: Trebuchet MS, Calibri;
+}
+
+#secMain {
+  padding-left: 4px;
+  padding-right: 4px;
+  border-width: 0px 1px 0px 1px;
+  border-style: solid;
+  border-color: #585858;
 }
 
 p {
@@ -21,12 +35,24 @@ p {
 }
 
 #topLine {
-  width: 100%;
+  width: 946px;
   height: 50px;
+  /*padding-top: 4px;*/
+  padding-left: 6px;
+  padding-right: 6px;
+  background-color: #eff2fb;
+  color: #585858;
+  border: 1px solid;
+  border-color: #585858;
+  border-radius: 6px 6px 0px 0px;
 }
 
 #leftTop {
 	width: 90%;
+}
+
+#rightTop {
+    padding-top: 4px;
 }
 
 .fLeft {
@@ -40,7 +66,8 @@ p {
 
 h1 {
 	margin-top: 0px;
-	padding-top: 0px;
+	font-family: "arial", Georgia, serif;
+	font-weight: bold;
 }
 
 table {

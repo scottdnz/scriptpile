@@ -23,10 +23,12 @@
 	
 	</div>
 	
+	<div id="secMain">
+	
 	<form action="alt_text_grabber" method="POST" enctype="multipart/form-data">
 	    
 	    <p>
-	    	<span class="lbl">Select image to upload:</span>
+	    	<span class="lbl">Select the zip file to upload: </span>
 	    	<span class="field"><input type="file" name="fileToUpload" id="fileToUpload">
 	    	</span>
     	</p>
@@ -35,6 +37,7 @@
 	    {% csrf_token %} 
 	</form>
 	
+	</div>
 	
 	</div>
 	
