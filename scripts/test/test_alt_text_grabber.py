@@ -17,8 +17,8 @@ def get_test_dest_dir():
     media_root = settings.MEDIA_ROOT
     #now_sfx = dt.datetime.now().strftime('%Y%m%d_%H%M%S')
     #now_sfx = ''
-    #dest_dir = os.path.join(media_root, 'test_job_2050109')
-    dest_dir = os.path.join(media_root, 'test_job_20150901_airnz')
+    dest_dir = os.path.join(media_root, 'test_job_2050109')
+    #dest_dir = os.path.join(media_root, 'test_job_20150112_so_try')
     return dest_dir
 
 
@@ -95,8 +95,8 @@ class Tester(unittest.TestCase):
             else:
                 print(res['errors'])
         
-        for k, v in html_files.items():
-            print('{}:\n {}'.format(k, v))
+#        for k, v in html_files.items():
+#            print('{}:\n {}'.format(k, v))
     
 #    def test_(self):
 

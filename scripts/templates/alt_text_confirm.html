@@ -24,7 +24,7 @@
 	
 	</div>	
 
-	result: {{ result }}<br>
+	<!-- result: {{ result }}<br> -->
 	
 	{% for html_f, values in html_files.items %}
 	<h2>Images found inside file: {{ html_f }}</h2>
@@ -38,13 +38,9 @@
 		<tr>
 			<td class="w400">
 			
-			{% if "http" in image.location %}
-			    <img src="{{ image.location}}" />
-		    {% else %}
+
     			<img src="http://localhost{{ dest_dir }}/thumbs/{{ image.thumb_name }}" />
-			{% endif %}
-			
-			
+
 			<br>
 			{{ image.f_name }}</td>
 			<td>{{ image.alt_text }}</td>
