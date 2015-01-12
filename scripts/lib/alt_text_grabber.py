@@ -106,7 +106,10 @@ def find_all_html_files(job_dir):
     
     
 def make_thumbnails_for_html_f(img_list, dest_dir):
-    '''
+    '''This function processes the image links found in the HTML file(s).
+    It creates a "thumbs" directory, and copies the image files into there,
+    if possible. It also stored a link to each thumbnail file in the images
+    "thumb_name" field.
     
      html_files dict format:
         {'example2.htm':
@@ -151,7 +154,7 @@ def make_thumbnails_for_html_f(img_list, dest_dir):
                 posn_last_dot = img_list[i]['f_name'].rfind('.')
                 im = Image.open(StringIO(resp.content))    
                 (width, height ) = im.size
-                
+                #Create thumbnails based on size
                 if height > 100 or width > 400: #It's too big, make a thumbnail.
                     im.thumbnail(size)
                 try:
@@ -169,12 +172,12 @@ def make_thumbnails_for_html_f(img_list, dest_dir):
                         img_list[i]['thumb_name'] = thumb_fname
                 except:
                     pass
-                    
-                     
+                                        
         else:    
             #This is a path to a local resource
             img_full_path = os.path.join(dest_dir, img_list[i]['location'])
             try:
+                #Create thumbnails based on size
                 im = Image.open(img_full_path)
                 (width, height) = im.size
                 if height > 100 or width > 400: #It's too big, make a thumbnail.
