@@ -126,6 +126,10 @@ def make_thumbnails_for_html_f(img_list, dest_dir):
             },
         'example2.htm': ...
         }
+        
+    :param img_list: a list of dicts containing images info.   
+    :param dest_dir: the destination diretory for the extracted files.
+    :return res: a dict containing either images info or errors.
     '''
     res = {'errors': [],
             'images_info': []}
@@ -135,70 +139,60 @@ def make_thumbnails_for_html_f(img_list, dest_dir):
     if not os.path.isdir(output_dir):
         os.mkdir(output_dir)
     
-    
     for i in range(0, len(img_list)):
     
         if 'http' in img_list[i]['location']:
+            #This is a link to a remote resource. Download it with a request.
             url = img_list[i]['location'].strip()
             resp = requests.get(url)
             #if resp.status_code == 200 and 
             if (resp.headers["content-type"] 
-                in allowed_img_types):
-                
+                in allowed_img_types):                
                 posn_last_dot = img_list[i]['f_name'].rfind('.')
-
-                
                 im = Image.open(StringIO(resp.content))    
                 (width, height ) = im.size
-
-                if height > 100 or width > 400:
-                    im.thumbnail(size)
-                try:        
-                    ext = 'jpg'
-                    thumb_fname = img_list[i]['f_name'][:posn_last_dot] + '_thumb.' + ext
-                    thumb_f = os.path.join(output_dir, thumb_fname)
-                    im.save(thumb_f, "JPEG")
-                    img_list[i]['thumb_name'] = thumb_fname
-                    print(thumb_fname)
-                except IOError as exc:
-                    print('not a good JPEG') 
-                    ext = 'gif'
-                    thumb_fname = img_list[i]['f_name'][:posn_last_dot] + '_thumb.' + ext
-                    print(thumb_fname)
-                    thumb_f = os.path.join(output_dir, thumb_fname)
-                    im.save(thumb_f, "GIF")
-                    img_list[i]['thumb_name'] = thumb_fname
-            else:
-                print('url: {}, status c: {}'.format(url, resp.status_code))
                 
-     
+                if height > 100 or width > 400: #It's too big, make a thumbnail.
+                    im.thumbnail(size)
+                try:
+                    if resp.headers["content-type"] == 'image/gif':
+                        ext = 'gif'
+                        thumb_fname = img_list[i]['f_name'][:posn_last_dot] + '_thumb.' + ext
+                        thumb_f = os.path.join(output_dir, thumb_fname)
+                        im.save(thumb_f, "GIF")
+                        img_list[i]['thumb_name'] = thumb_fname
+                    else:       
+                        ext = 'jpg'
+                        thumb_fname = img_list[i]['f_name'][:posn_last_dot] + '_thumb.' + ext
+                        thumb_f = os.path.join(output_dir, thumb_fname)
+                        im.save(thumb_f, "JPEG")
+                        img_list[i]['thumb_name'] = thumb_fname
+                except:
+                    pass
+                    
+                     
         else:    
-            
-            
+            #This is a path to a local resource
             img_full_path = os.path.join(dest_dir, img_list[i]['location'])
-       
-    #            try:
-            im = Image.open(img_full_path)
-            (width, height) = im.size
-            if height > 100 or width > 400:
-                posn_last_dot = img_list[i]['f_name'].rfind('.')
-                thumb_fname = img_list[i]['f_name'][:posn_last_dot] + '_thumb.jpg'
-                thumb_f = os.path.join(output_dir, thumb_fname)
-    #            print(thumb_f)
-            
-                im.thumbnail(size)
-                im.save(thumb_f, "JPEG")                
-
-                img_list[i]['thumb_name'] = thumb_fname
-            else:
-                f = os.path.join(output_dir, img_list[i]['f_name'])
-                shutil.copy(img_full_path, output_dir)
-                img_list[i]['thumb_name'] = os.path.basename(img_list[i]['f_name'])
-                                
-#            except IOError as exc:
-#                res['errors'].append(
-#                    'Cannot create thumbnail for {}. Error: {}'.format(img, 
-#                    exc.__str__()))
+            try:
+                im = Image.open(img_full_path)
+                (width, height) = im.size
+                if height > 100 or width > 400: #It's too big, make a thumbnail.
+                    posn_last_dot = img_list[i]['f_name'].rfind('.')
+                    thumb_fname = img_list[i]['f_name'][:posn_last_dot] + '_thumb.jpg'
+                    thumb_f = os.path.join(output_dir, thumb_fname)
+                    im.thumbnail(size)
+                    im.save(thumb_f, "JPEG")                
+                    img_list[i]['thumb_name'] = thumb_fname
+                else:
+                    f = os.path.join(output_dir, img_list[i]['f_name'])
+                    shutil.copy(img_full_path, output_dir)
+                    img_list[i]['thumb_name'] = os.path.basename(img_list[i]
+                                                                ['f_name'])
+            except IOError as exc:
+                res['errors'].append(
+                    'Cannot create thumbnail for {}. Error: {}'.format(img, 
+                    exc.__str__()))
     res['images_info'] = img_list    
     return res
 
