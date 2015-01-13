@@ -157,45 +157,45 @@ def make_thumbnails_for_html_f(img_list, dest_dir):
                 #Create thumbnails based on size
                 if height > 100 or width > 400: #It's too big, make a thumbnail.
                     im.thumbnail(size)
-                try:
-                    if resp.headers["content-type"] == 'image/gif':
-                        ext = 'gif'
-                        thumb_fname = img_list[i]['f_name'][:posn_last_dot] + '_thumb.' + ext
-                        thumb_f = os.path.join(output_dir, thumb_fname)
-                        im.save(thumb_f, "GIF")
-                        img_list[i]['thumb_name'] = thumb_fname
-                    else:       
-                        ext = 'jpg'
-                        thumb_fname = img_list[i]['f_name'][:posn_last_dot] + '_thumb.' + ext
-                        thumb_f = os.path.join(output_dir, thumb_fname)
-                        im.save(thumb_f, "JPEG")
-                        img_list[i]['thumb_name'] = thumb_fname
-                except:
-                    pass
+#                try:
+                if resp.headers["content-type"] == 'image/gif':
+                    ext = 'gif'
+                    thumb_fname = img_list[i]['f_name'][:posn_last_dot] + '_thumb.' + ext
+                    thumb_f = os.path.join(output_dir, thumb_fname)
+                    im.save(thumb_f, "GIF")
+                    img_list[i]['thumb_name'] = thumb_fname
+                else:       
+                    ext = 'jpg'
+                    thumb_fname = img_list[i]['f_name'][:posn_last_dot] + '_thumb.' + ext
+                    thumb_f = os.path.join(output_dir, thumb_fname)
+                    im.save(thumb_f, "JPEG")
+                    img_list[i]['thumb_name'] = thumb_fname
+#                except:
+#                    pass
                                         
         else:    
             #This is a path to a local resource
             img_full_path = os.path.join(dest_dir, img_list[i]['location'])
-            try:
-                #Create thumbnails based on size
-                im = Image.open(img_full_path)
-                (width, height) = im.size
-                if height > 100 or width > 400: #It's too big, make a thumbnail.
-                    posn_last_dot = img_list[i]['f_name'].rfind('.')
-                    thumb_fname = img_list[i]['f_name'][:posn_last_dot] + '_thumb.jpg'
-                    thumb_f = os.path.join(output_dir, thumb_fname)
-                    im.thumbnail(size)
-                    im.save(thumb_f, "JPEG")                
-                    img_list[i]['thumb_name'] = thumb_fname
-                else:
-                    f = os.path.join(output_dir, img_list[i]['f_name'])
-                    shutil.copy(img_full_path, output_dir)
-                    img_list[i]['thumb_name'] = os.path.basename(img_list[i]
-                                                                ['f_name'])
-            except IOError as exc:
-                res['errors'].append(
-                    'Cannot create thumbnail for {}. Error: {}'.format(img, 
-                    exc.__str__()))
+#            try:
+        #Create thumbnails based on size
+            im = Image.open(img_full_path)
+            (width, height) = im.size
+            if height > 100 or width > 400: #It's too big, make a thumbnail.
+                posn_last_dot = img_list[i]['f_name'].rfind('.')
+                thumb_fname = img_list[i]['f_name'][:posn_last_dot] + '_thumb.jpg'
+                thumb_f = os.path.join(output_dir, thumb_fname)
+                im.thumbnail(size)
+                im.save(thumb_f, "JPEG")                
+                img_list[i]['thumb_name'] = thumb_fname
+            else:
+                f = os.path.join(output_dir, img_list[i]['f_name'])
+                shutil.copy(img_full_path, output_dir)
+                img_list[i]['thumb_name'] = os.path.basename(img_list[i]
+                                                            ['f_name'])
+#            except IOError as exc:
+#                res['errors'].append(
+#                    'Cannot create thumbnail for {}. Error: {}'.format(img, 
+#                    exc.__str__()))
     res['images_info'] = img_list    
     return res
 

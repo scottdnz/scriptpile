@@ -22,6 +22,7 @@ def alt_text_grabber(request):
         if request.FILES.has_key('fileToUpload'):
             resp = handle_uploaded_f(settings.MEDIA_ROOT, 
                 request.FILES['fileToUpload'])
+            resp['host_ref'] = settings.HOST_REF
         else:
             pass
         return render_to_response('alt_text_confirm.html', resp)
