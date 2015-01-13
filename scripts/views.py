@@ -26,6 +26,14 @@ def alt_text_grabber(request):
         else:
             pass
         return render_to_response('alt_text_confirm.html', resp)
+        
+        
+def link_resolver(request):
+     if request.method == 'GET':
+        return render(request, 'link_resolver.html')
+     elif request.method == 'POST':
+        pass
+    
     
 
 

@@ -12,12 +12,20 @@ body {
   font-family: Trebuchet MS, Calibri;
 }
 
+.h800 {
+    height: 800px;
+    border-radius: 0px 0px 6px 6px;
+    border-width: 0px 1px 1px 1px;
+    border-style: solid;
+    border-color: #585858;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
 #secMain {
   padding-left: 4px;
   padding-right: 4px;
-  border-width: 0px 1px 0px 1px;
-  border-style: solid;
-  border-color: #585858;
+
 }
 
 p {
