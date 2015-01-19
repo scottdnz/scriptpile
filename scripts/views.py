@@ -4,7 +4,7 @@ from django.conf import settings
 #from django.http import HttpResponse
 
 from scripts.lib.alt_text_grabber import handle_uploaded_f
-from scripts.lib.link_resolver import handle_link_f
+from scripts.lib.link_resolver import handle_link_f, read_csv_file
 
 
 #def index(request):
@@ -48,11 +48,14 @@ def link_resolver_confirm(request):
     if request.method == 'GET':
         return render(request, 'link_resolver_confirm.html')
     elif request.method == 'POST':
-        resp = {'cols_to_check': [], 'errors': [], 'url_prefix': ''}
-        for i in range(1, 6):
+        resp = {'cols_to_check': [], 'errors': [], 'url_prefix': '',
+            'path_to_f': request.POST['path_to_f'], 
+            'separator': str(request.POST['separator'])
+             }
+        for i in range(6):
             col_to_check = 'col{}ForURL'.format(i)
             if request.POST.has_key(col_to_check) and request.POST[
-                col_to_check] != 'None':
+                col_to_check] != 'none':
                 resp['cols_to_check'].append(request.POST[col_to_check])
                 
         if request.POST['urlPrefixY'] == 'y' and (
@@ -64,6 +67,9 @@ def link_resolver_confirm(request):
         elif request.POST['urlPrefixY'] == 'y' and (
             len(request.POST['urlPrefix']) > 0):
             resp['url_prefix'] = request.POST['urlPrefix']
+            
+        resp['links_rows'] = read_csv_file(resp['path_to_f'], resp['separator'], 
+            resp['cols_to_check'], resp['url_prefix'])
             
         if len(resp['errors']) > 0:
             return render(request, 'link_resolver_confirm.html', resp)
