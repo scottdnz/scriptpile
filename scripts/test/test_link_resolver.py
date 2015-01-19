@@ -33,7 +33,7 @@ class Tester(unittest.TestCase):
    
     #def test_get_col_headings(self):
     #    path_to_f = os.path.join(self.dest_dir, 'test_f_an_v2.txt')
-    #    fieldnames = get_col_headings(path_to_f, separator='|')
+    #    fieldnames = get_col_headi ngs(path_to_f, separator='|')
     #    self.assertEqual(len(fieldnames), 35)
         
     
@@ -58,7 +58,7 @@ class Tester(unittest.TestCase):
     def test_try_each_link(self):
         path_to_f = os.path.join(self.dest_dir, 'test_f_an_v2.txt')
         cols_to_check = ['PXT1_GROUP', 'PXT2_GROUP']
-        prefix = 'https://flybuys-permissionnzltd.netdna-ssl.com/partners/'
+        prefix = ''
         links_rows = read_csv_file(path_to_f, '|', cols_to_check, prefix)
         
         res = try_each_link(links_rows)
