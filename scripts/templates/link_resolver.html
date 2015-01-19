@@ -9,7 +9,7 @@
     
     <body>
     
-    <div id="pMain" class="h800">
+    <div id="pMain">
     
     <div id="topLine">
         <div id="leftTop" class="fLeft">
@@ -24,18 +24,44 @@
     
     </div>  
 
-    <!-- result: {{ result }}<br> -->
+    <!-- result: {{ result }}<br> 
     
     <p>
     {% for c in cols_to_check %}
     {{ c }} <br>
     {% endfor %}
-    </p>
+    </p> -->
 
 <p>{{url_prefix}}</p>
 
-{{ links_rows }}
-    
+
+    {% for col, link_dic in links_rows.items %}
+    <h2>Values found in column: {{ col }}</h2>
+    <table>
+        <tr>
+            <th class="w400">File</th>
+            <th>Response code</th>
+            <th>Response type</th>
+        </tr>
+        
+        {% for url_k, url_v in link_dic.items %}
+        
+        <tr>
+            <td class="w400">{{ url_k }}</td>
+            <td>{{ url_v.resp_code }} 
+            {% if url_v.resp_code = "200" %}
+                <img src="{% static 'scripts/img/tick_20h.png' %}" alt="200" />
+            {% else %}
+                <img src="{% static 'scripts/img/cross_20h.png' %}" alt="200" />
+            {% endif %}
+            </td>
+            <td>{{ url_v.resp_type }}</td>
+
+        </tr>
+        {% endfor %}
+        
+    </table>
+    {% endfor %}
     
     <br>
 

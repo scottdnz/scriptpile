@@ -106,6 +106,6 @@ def try_each_link(links_rows):
                 links_rows[k][url_k]['resp_code'] = unicode(resp.status_code)
                 links_rows[k][url_k]['resp_type'] = resp.headers["content-type"]
         except requests.exceptions.ConnectionError as exc:
-            errors.append(exc.__str__())
+            res['errors'].append(exc.__str__())
     res['links_rows'] = links_rows
     return res

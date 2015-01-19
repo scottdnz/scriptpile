@@ -4,7 +4,8 @@ from django.conf import settings
 #from django.http import HttpResponse
 
 from scripts.lib.alt_text_grabber import handle_uploaded_f
-from scripts.lib.link_resolver import handle_link_f, read_csv_file
+from scripts.lib.link_resolver import (handle_link_f, read_csv_file, 
+    try_each_link)
 
 
 #def index(request):
@@ -50,7 +51,8 @@ def link_resolver_confirm(request):
     elif request.method == 'POST':
         resp = {'cols_to_check': [], 'errors': [], 'url_prefix': '',
             'path_to_f': request.POST['path_to_f'], 
-            'separator': str(request.POST['separator'])
+            'separator': str(request.POST['separator']),
+            'links_rows': {}
              }
         for i in range(6):
             col_to_check = 'col{}ForURL'.format(i)
@@ -70,6 +72,12 @@ def link_resolver_confirm(request):
             
         resp['links_rows'] = read_csv_file(resp['path_to_f'], resp['separator'], 
             resp['cols_to_check'], resp['url_prefix'])
+        
+
+        res = try_each_link(resp['links_rows'])
+        if len(res['errors']) > 0:
+            resp['errors'] += res['errors']
+        resp['links_rows'] = res['links_rows']
             
         if len(resp['errors']) > 0:
             return render(request, 'link_resolver_confirm.html', resp)
