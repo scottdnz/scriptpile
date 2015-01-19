@@ -1,7 +1,8 @@
 '''
-.. module:: alt_text_grabber
+.. module:: link_resolver
     :platform: Linux
-    :synopsis: This file contains library functions for dealing with a uploaded 
+    :synopsis: This file contains library functions for dealing with an uploaded 
+    list of URLs, probably for images.
     
     
 .. moduleauthor:: Scott D.
@@ -9,18 +10,22 @@
 
 
 import os, sys, csv, shutil
-from StringIO import StringIO
+#from StringIO import StringIO
 import datetime as dt
 
 import requests
-from PIL import Image
+#from PIL import Image
 
 
 def get_col_headings(path_to_f, separator):
-    ''' '''
-    res = {}
-    links_rows = []
+    '''Returns a tuple of column names found in the first row of a datafile.
     
+    :param path_to_f: the path to the datafile.
+    :type path_to_f: str.
+    :param separator: the delimiter character. 
+    :type separator: str.
+    :return fieldnames: all the column heading labels found in the datafile.
+    :rtype: tuple.'''
     csvfile = open(path_to_f, 'r')
     rdr = csv.DictReader(csvfile, delimiter=separator)
     fieldnames = tuple(rdr.fieldnames)
@@ -29,13 +34,16 @@ def get_col_headings(path_to_f, separator):
 
 
 def handle_link_f(media_root, f, format):
-    '''Takes a file uploaded in a Post form...
+    '''Takes a file uploaded in a Post form and writes it to the /media
+    directory.
     
     :param media_root: the Django media root directory.
     :type media_root: str.
     :param f: the file uploaded.
     :type f: File object
-    :return resp: info about the HTML files found in the zip file.
+    :param format: the delimiter format for the file.
+    :type format: str.
+    :return resp: info about the links in the selected file columns.
     :rtype: dict.'''
     resp = {'result': '', 'fieldnames': (), 'dest_dir': '', 'errors': [], 
     'full_path': [] }
@@ -67,6 +75,20 @@ def handle_link_f(media_root, f, format):
     
     
 def read_csv_file(path_to_f, separator, cols_to_check, prefix):
+    '''Parses the datafile's selected column cells and stores in the information
+    in a links_rows dict.
+    
+    :param path_to_f: the path to the uploaded data file.
+    :type path_to_f: str.
+    :param separator: the delimiter character.
+    :type separator: str.
+    :param cols_to_check: the selected column name labels to parse.
+    :type cols_to_check: tuple.
+    :param prefix: link text that should be inserted before the cell's text, e.g. 
+    http://myserver/images/
+    :type prefix: str.
+    :return links_rows: information about the links found in each column.
+    :rtype: dict.'''
     links_rows = {}
     prefix_yes = False
     if len(prefix) > 0:
@@ -79,7 +101,7 @@ def read_csv_file(path_to_f, separator, cols_to_check, prefix):
     for row in rdr:
         for col in cols_to_check:
             url = row[col]
-            if not prefix_yes and not 'http' in url:
+            if len(url) == 0 or (not prefix_yes and not 'http' in url):
                 continue
             if 'http' in url:
                 url_to_check = url
@@ -95,13 +117,19 @@ def read_csv_file(path_to_f, separator, cols_to_check, prefix):
     return links_rows
     
 
-def try_each_link(links_rows):    
+def try_each_link(links_rows): 
+    '''Tries requesting each link associated with each nominated column's cells 
+    in the datafile.
+    
+    :param links_rows: information about links found in the selected column 
+    cells in the datafile.
+    :type links_rows: dict.
+    :return res: the results of trying each link found.
+    :rtype: dict.'''
     res = {'links_rows': {}, 'errors': []}
     for k, v in links_rows.items():
-        #print("*****".format(k))
         try:
             for url_k, url_v in v.items():
-                #print('....')
                 resp = requests.get(url_k)
                 links_rows[k][url_k]['resp_code'] = unicode(resp.status_code)
                 links_rows[k][url_k]['resp_type'] = resp.headers["content-type"]
