@@ -225,8 +225,8 @@ def make_thumbnails_for_html_f(img_list, dest_dir):
                                                                 ['f_name'])
             except IOError as exc:
                 res['errors'].append(
-                    'Cannot create thumbnail for {}. Error: {}'.format(img, 
-                    exc.__str__()))
+                    'Cannot create thumbnail for {}. Error: {}'.format(
+                    img_list[i]['f_name'], exc.__str__()))
     res['images_info'] = img_list    
     return res
 

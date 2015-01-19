@@ -17,8 +17,10 @@ def get_test_dest_dir():
     media_root = settings.MEDIA_ROOT
     #now_sfx = dt.datetime.now().strftime('%Y%m%d_%H%M%S')
     #now_sfx = ''
-    dest_dir = os.path.join(media_root, 'test_job_20150115')
+    #dest_dir = os.path.join(media_root, 'test_job_20150115')
     #dest_dir = os.path.join(media_root, 'test_job_20150112_so_try')
+    dest_dir = os.path.join(media_root, 'test_job_20150119_pp_try')
+    
     return dest_dir
 
 

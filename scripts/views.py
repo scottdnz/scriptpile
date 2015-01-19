@@ -4,6 +4,7 @@ from django.conf import settings
 #from django.http import HttpResponse
 
 from scripts.lib.alt_text_grabber import handle_uploaded_f
+from scripts.lib.link_resolver import handle_link_f
 
 
 #def index(request):
@@ -28,10 +29,32 @@ def alt_text_grabber(request):
         return render_to_response('alt_text_confirm.html', resp)
         
         
+def link_resolver_upload(request):
+    if request.method == 'GET':
+        return render(request, 'link_resolver_upload.html')
+    elif request.method == 'POST':
+        resp = {}
+        if not request.POST.has_key('format'):
+            resp['errors'] = ['Format key missing.',]
+        elif not request.FILES.has_key('fileToUpload'):
+            resp['errors'] = ['Please choose a file',]
+        else:
+            resp = handle_link_f(settings.MEDIA_ROOT, 
+                    request.FILES['fileToUpload'])
+        return render_to_response('link_resolver_confirm.html', resp)
+        
+        
+def link_resolver_confirm(request):
+    if request.method == 'GET':
+        return render(request, 'link_resolver_confirm.html')
+    elif request.method == 'POST':
+        pass
+        
+        
 def link_resolver(request):
-     if request.method == 'GET':
+    if request.method == 'GET':
         return render(request, 'link_resolver.html')
-     elif request.method == 'POST':
+    elif request.method == 'POST':
         pass
     
     
@@ -65,5 +88,3 @@ def file_uploader(request):
             except Exception as exc:
                 resp['result'] = 'bad, ' + exc.__str__()    
         return render_to_response('file_uploader_confirm.html', resp)
-    
-    
