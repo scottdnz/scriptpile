@@ -1,40 +1,45 @@
 <html>
-	<head>
-		<title>Alt Text Confirm</title>
-		{% load staticfiles %}		
-		<link rel="stylesheet" type="text/css" href="{% static 'scripts/css/common.css' %}" />
+    <head>
+        <title>Link Resolver</title>
+        {% load staticfiles %}      
+        <link rel="stylesheet" type="text/css" href="{% static 'scripts/css/common.css' %}" />
     
-    	<script type="text/javascript" src="{% static 'scripts/js/jquery-1.11.2.js' %}"></script>
-	</head>
-	
-	<body>
-	
-	<div id="pMain" class="h800">
-	
-	<div id="topLine">
-		<div id="leftTop" class="fLeft">
-			<h1>Link Resolver</h1>
-		</div>
-	
-		<div id="rightTop" class="fRight">
-			<a href="/scriptpile/scripts/">
-			<img src="{% static 'scripts/img/home_24_24.png' %}" alt="home" />
-			</a>
-		</div>
-	
-	</div>	
+        <script type="text/javascript" src="{% static 'scripts/js/jquery-1.11.2.js' %}"></script>
+    </head>
+    
+    <body>
+    
+    <div id="pMain" class="h800">
+    
+    <div id="topLine">
+        <div id="leftTop" class="fLeft">
+            <h1>Link Resolver</h1>
+        </div>
+    
+        <div id="rightTop" class="fRight">
+            <a href="/scriptpile/scripts/">
+            <img src="{% static 'scripts/img/home_24_24.png' %}" alt="home" />
+            </a>
+        </div>
+    
+    </div>  
 
-	<!-- result: {{ result }}<br> -->
-	
-	<p>This is a work in progress</p>
+    <!-- result: {{ result }}<br> -->
+    
+    <p>
+    {% for c in cols_to_check %}
+    {{ c }} <br>
+    {% endfor %}
+    </p>
 
-	
-	
-	<br>
+<p>{{url_prefix}}</p>
+    
+    
+    <br>
 
 
-	
-	</div>
-	
-	</body>
+    
+    </div>
+    
+    </body>
 </html>

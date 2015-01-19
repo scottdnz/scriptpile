@@ -40,15 +40,37 @@ def link_resolver_upload(request):
             resp['errors'] = ['Please choose a file',]
         else:
             resp = handle_link_f(settings.MEDIA_ROOT, 
-                    request.FILES['fileToUpload'])
-        return render_to_response('link_resolver_confirm.html', resp)
+                    request.FILES['fileToUpload'], request.POST['format'])
+        return render(request, 'link_resolver_confirm.html', resp)
         
         
 def link_resolver_confirm(request):
     if request.method == 'GET':
         return render(request, 'link_resolver_confirm.html')
     elif request.method == 'POST':
-        pass
+        resp = {'cols_to_check': [], 'errors': [], 'url_prefix': ''}
+        for i in range(1, 6):
+            col_to_check = 'col{}ForURL'.format(i)
+            if request.POST.has_key(col_to_check) and request.POST[
+                col_to_check] != 'None':
+                resp['cols_to_check'].append(request.POST[col_to_check])
+                
+        if request.POST['urlPrefixY'] == 'y' and (
+            not request.POST.has_key('urlPrefix') or 
+            len(request.POST['urlPrefix']) == 0):
+            resp['errors'].append(
+            'Please choose a URL prefix. Click Go Back to start again.')
+        
+        elif request.POST['urlPrefixY'] == 'y' and (
+            len(request.POST['urlPrefix']) > 0):
+            resp['url_prefix'] = request.POST['urlPrefix']
+            
+        if len(resp['errors']) > 0:
+            return render(request, 'link_resolver_confirm.html', resp)
+        else:    
+            return render(request, 'link_resolver.html', resp)
+        
+                
         
         
 def link_resolver(request):
@@ -57,8 +79,6 @@ def link_resolver(request):
     elif request.method == 'POST':
         pass
     
-    
-
 
 def test_form(request):
     if request.method == 'GET':

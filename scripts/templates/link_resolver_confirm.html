@@ -1,0 +1,135 @@
+
+<html>
+    <head>
+        <title>Link Resolver Confirm</title>
+        {% load staticfiles %}      
+        <link rel="stylesheet" type="text/css" href="{% static 'scripts/css/common.css' %}" />
+
+    </head>
+    
+    <body>
+    
+    <div id="pMain">
+    
+    <div id="topLine">
+        <div id="leftTop" class="fLeft">
+            <h1>Link ResolverConfirm</h1>
+        </div>
+    
+        <div id="rightTop" class="fRight">
+            <a href="/scriptpile/scripts/">
+            <img src="{% static 'scripts/img/home_24_24.png' %}" alt="home" />
+            </a>
+        </div>
+    
+    </div>  
+<br>
+    errors: {{ errors }}<br> 
+    result: {{ result }}<br>
+
+    <form action="link_resolver_confirm" method="POST" enctype="multipart/form-data">
+        
+        <p>Please choose the columns with URLs to check</p>     
+           
+        <p>
+            <span class="lbl">Col with URL 1</span>
+            <span class="field">
+                <select name="col1ForURL">
+                    {% for f in fieldnames %}
+                        <option value="{{f}}">{{f}}</option>
+                    {% endfor %}
+                </select>
+            </span>
+        </p>
+        
+        <p>
+            <span class="lbl">Col with URL 2</span>
+            <span class="field">
+                <select name="col2ForURL">
+                    <option value="none">None</option>
+                    {% for f in fieldnames %}
+                        <option value="{{f}}">{{f}}</option>
+                    {% endfor %}
+                </select>
+            </span>
+        </p>
+        
+        <p>
+            <span class="lbl">Col with URL 3</span>
+            <span class="field">
+                <select name="col3ForURL">
+                    <option value="none">None</option>
+                    {% for f in fieldnames %}
+                        <option value="{{f}}">{{f}}</option>
+                    {% endfor %}
+                </select>
+            </span>
+        </p>
+        
+        <p>
+            <span class="lbl">Col with URL 4</span>
+            <span class="field">
+                <select name="col4ForURL">
+                    <option value="none">None</option>
+                    {% for f in fieldnames %}
+                        <option value="{{f}}">{{f}}</option>
+                    {% endfor %}
+                </select>
+            </span>
+        </p>
+        
+        <p>
+            <span class="lbl">Col with URL 5</span>
+            <span class="field">
+                <select name="col5ForURL">
+                    <option value="none">None</option>
+                    {% for f in fieldnames %}
+                        <option value="{{f}}">{{f}}</option>
+                    {% endfor %}
+                </select>
+            </span>
+        </p>
+        
+        <p>
+            <span class="lbl">Col with URL 6</span>
+            <span class="field">
+                <select name="col6ForURL">
+                    <option value="none">None</option>
+                    {% for f in fieldnames %}
+                        <option value="{{f}}">{{f}}</option>
+                    {% endfor %}
+                </select>
+            </span>
+        </p>
+        
+        <p>Is there a prefix you want added to your URL? <br>
+        e.g. www.myimageserver/mydirectory
+        </p>
+        
+        <p>
+            <input type="radio" name="urlPrefixY" value="y" checked="checked">Yes 
+            <input type="radio" name="urlPrefixY" value="n">No
+        </p>
+        
+        <p>
+            <span class="lbl">Prefix</span>
+            <span class="field">
+                <input type="text" name="urlPrefix">
+            </span>
+        </p>
+    
+        <br>
+        
+        <input type="submit" value="Confirm Links" name="submit">
+         {% csrf_token %} 
+            </form>
+    
+    
+    <br>
+    <a href="link_resolver_upload">Go Back</a>
+
+    
+    </div>
+    
+    </body>
+</html>

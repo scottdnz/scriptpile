@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <title>Link Resolver Upload</title>
+        {% load staticfiles %}      
+        <link rel="stylesheet" type="text/css" href="{% static 'scripts/css/common.css' %}" />
+    
+    </head>
+    
+    <body>
+    
+    <div id="pMain" class="h800">
+    
+    <div id="topLine">
+        <div id="leftTop" class="fLeft">
+            <h1>Link Resolver Upload</h1>
+                    </div>
+    
+        <div id="rightTop" class="fRight">
+            <a href="/scriptpile/scripts/">
+            <img src="{% static 'scripts/img/home_24_24.png' %}" alt="home" />
+            </a>
+        </div>
+    
+    </div>
+    
+    <div id="secMain">
+    
+    <form action="link_resolver_upload" method="POST" enctype="multipart/form-data">
+        
+        <p>
+            <span class="lbl">Select the zip file to upload: </span>
+            <span class="field"><input type="file" name="fileToUpload" id="fileToUpload">
+            </span>
+        </p>
+        <br>
+        
+        <p><span class="lbl">What format is this file in?</span>
+            <input type="radio" name="format" value="pipe" checked="checked">Pipe separated<br>
+            <input type="radio" name="format" value="csv">CSV
+        </p>
+        
+        <br><br>
+        <input type="submit" value="Upload Link File" name="submit">
+        {% csrf_token %} 
+    </form>
+    
+
+    
+    </div>
+    
+    </div>
+    
+    </body>
+</html>
