@@ -1,61 +1,63 @@
 <html>
-	<head>
-		<title>Alt Text Confirm</title>
-		{% load staticfiles %}		
-		<link rel="stylesheet" type="text/css" href="{% static 'scripts/css/common.css' %}" />
+    <head>
+        <title>Alt Text Confirm</title>
+        {% load staticfiles %}      
+        <link rel="stylesheet" type="text/css" href="{% static 'scripts/css/common.css' %}" />
     
-    	<script type="text/javascript" src="{% static 'scripts/js/jquery-1.11.2.js' %}"></script>
-	</head>
-	
-	<body>
-	
-	<div id="pMain">
-	
-	<div id="topLine">
-		<div id="leftTop" class="fLeft">
-			<h1>Alt Text Confirm</h1>
-		</div>
-	
-		<div id="rightTop" class="fRight">
-			<a href="/scriptpile/scripts/">
-			<img src="{% static 'scripts/img/home_24_24.png' %}" alt="home" />
-			</a>
-		</div>
-	
-	</div>	
+        <script type="text/javascript" src="{% static 'scripts/js/jquery-1.11.2.js' %}"></script>
+    </head>
+    
+    <body>
+    
+    <div id="pMain">
+    
+    <div id="topLine">
+        <div id="leftTop" class="fLeft">
+            <h1>Alt Text Confirm</h1>
+        </div>
+    
+        <div id="rightTop" class="fRight">
+            <a href="/scriptpile/scripts/">
+            <img src="{% static 'scripts/img/home_24_24.png' %}" alt="home" />
+            </a>
+        </div>
+    
+    </div>  
+    
+    {% for html_f, values in html_files.items %}
+    <h2>Images found inside file: {{ html_f }}</h2>
+    <table>
+        <tr>
+            <th class="w400">Image Thumb</th>
+            <th>Alt text</th>
+            <th>Retrieved from</th>
+        </tr>
+        {% for image in values.images %}
+        <tr>
+            <td class="w400">
+            
 
-	<!-- result: {{ result }}<br> -->
-	
-	{% for html_f, values in html_files.items %}
-	<h2>Images found inside file: {{ html_f }}</h2>
-	<table>
-		<tr>
-			<th class="w400">Image Thumb</th>
-			<th>Alt text</th>
-			<th>Retrieved from</th>
-		</tr>
-		{% for image in values.images %}
-		<tr>
-			<td class="w400">
-			
+                <img src="http://{{host_ref}}{{ dest_dir }}/thumbs/{{ image.thumb_name }}" />
 
-    			<img src="http://{{host_ref}}{{ dest_dir }}/thumbs/{{ image.thumb_name }}" />
+            <br>
+            {{ image.f_name }}</td>
+            <td>{{ image.alt_text }}</td>
+            <td>{{ image.location}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endfor %}
+    
+    Result messages (if any): {{ result }}<br>
+    
+    
+    <br>
+    <a href="alt_text_grabber">Go Back</a>
 
-			<br>
-			{{ image.f_name }}</td>
-			<td>{{ image.alt_text }}</td>
-			<td>{{ image.location}}</td>
-		</tr>
-		{% endfor %}
-	</table>
-	{% endfor %}
-	
-	
-	<br>
-	<a href="alt_text_grabber">Go Back</a>
 
-	
-	</div>
-	
-	</body>
+
+    
+    </div>
+    
+    </body>
 </html>

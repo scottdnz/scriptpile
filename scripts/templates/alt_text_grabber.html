@@ -1,47 +1,47 @@
 <html>
-	<head>
-		<title>Alt Text Grabber</title>
-		{% load staticfiles %}		
-		<link rel="stylesheet" type="text/css" href="{% static 'scripts/css/common.css' %}" />
+    <head>
+        <title>Alt Text Grabber</title>
+        {% load staticfiles %}      
+        <link rel="stylesheet" type="text/css" href="{% static 'scripts/css/common.css' %}" />
     
-	</head>
-	
-	<body>
-	
-	<div id="pMain" class="h800">
-	
-	<div id="topLine">
-		<div id="leftTop" class="fLeft">
-			<h1>Alt Text Grabber</h1>
-		</div>
-	
-		<div id="rightTop" class="fRight">
-			<a href="/scriptpile/scripts/">
-			<img src="{% static 'scripts/img/home_24_24.png' %}" alt="home" />
-			</a>
-		</div>
-	
-	</div>
-	
-	<div id="secMain">
-	
-	<form action="alt_text_grabber" method="POST" enctype="multipart/form-data">
-	    
-	    <p>
-	    	<span class="lbl">Select the zip file to upload: </span>
-	    	<span class="field"><input type="file" name="fileToUpload" id="fileToUpload">
-	    	</span>
-    	</p>
-	    <br><br>
-	    <input type="submit" value="Upload Zip File" name="submit">
-	    {% csrf_token %} 
-	</form>
-	
-	<p>Please note: it could take up to 30 seconds to run if your file contains many web links.</p>
-	
-	</div>
-	
-	</div>
-	
-	</body>
+    </head>
+    
+    <body>
+    
+    <div id="pMain" class="h800">
+    
+    <div id="topLine">
+        <div id="leftTop" class="fLeft">
+            <h1>Alt Text Grabber</h1>
+        </div>
+    
+        <div id="rightTop" class="fRight">
+            <a href="/scriptpile/scripts/">
+            <img src="{% static 'scripts/img/home_24_24.png' %}" alt="home" />
+            </a>
+        </div>
+    
+    </div>
+    
+    <div id="secMain">
+    
+    <form action="alt_text_grabber" method="POST" enctype="multipart/form-data">
+        
+        <p>
+            <span class="lbl">Select the zip file to upload: </span>
+            <span class="field"><input type="file" name="fileToUpload" id="fileToUpload">
+            </span>
+        </p>
+        <br><br>
+        <input type="submit" value="Upload Zip File" name="submit">
+        {% csrf_token %} 
+    </form>
+    
+    <p>Please note: it could take up to 30 seconds to run if your file contains many web links. Make sure at least one file with the extension .htm or .html is in your zip file.</p>
+    
+    </div>
+    
+    </div>
+    
+    </body>
 </html>
