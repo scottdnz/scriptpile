@@ -9,12 +9,17 @@
 '''
 
 
-import os, sys, csv, shutil
-#from StringIO import StringIO
+import os, csv, shutil
+from StringIO import StringIO
 import datetime as dt
 
 import requests
-#from PIL import Image
+from PIL import Image
+
+def remove_bad_chars2(thumb_fname):
+    thumb_fname = thumb_fname.replace('?', '')
+    thumb_fname = thumb_fname.replace('=', '')
+    return thumb_fname
 
 
 def get_col_headings(path_to_f, separator):
@@ -100,7 +105,7 @@ def read_csv_file(path_to_f, separator, cols_to_check, prefix):
     rdr = csv.DictReader(csvfile, delimiter=separator)
     for row in rdr:
         for col in cols_to_check:
-            url = row[col]
+            url = row[col].strip()
             if len(url) == 0 or (not prefix_yes and not 'http' in url):
                 continue
             if 'http' in url:
@@ -117,7 +122,7 @@ def read_csv_file(path_to_f, separator, cols_to_check, prefix):
     return links_rows
     
 
-def try_each_link(links_rows): 
+def try_each_link(links_rows, media_root): 
     '''Tries requesting each link associated with each nominated column's cells 
     in the datafile.
     
@@ -127,13 +132,74 @@ def try_each_link(links_rows):
     :return res: the results of trying each link found.
     :rtype: dict.'''
     res = {'links_rows': {}, 'errors': []}
-    for k, v in links_rows.items():
-        try:
-            for url_k, url_v in v.items():
+    size = (400, 100)
+    allowed_img_types = ('image/gif', 'image/png', 'image/jpeg')
+    
+    now_sfx = dt.datetime.now().strftime('%Y%m%d_%H%M%S')
+    dest_dir = os.path.join(media_root,  'job_' + now_sfx)
+    if not os.path.isdir(dest_dir):
+        os.mkdir(dest_dir)
+    res['dest_dir'] = '/media/job_' + now_sfx
+    
+    output_dir = os.path.join(dest_dir, 'thumbs')
+    if not os.path.isdir(output_dir):
+        os.mkdir(output_dir)
+    
+    for col_name, url_info in links_rows.items():
+        print('col_name: {} '.format(col_name))
+        for url_k, url_dic in url_info.items():
+            print('url_k: {}'.format(url_k))
+            
+            try:
                 resp = requests.get(url_k)
-                links_rows[k][url_k]['resp_code'] = unicode(resp.status_code)
-                links_rows[k][url_k]['resp_type'] = resp.headers["content-type"]
-        except requests.exceptions.ConnectionError as exc:
-            res['errors'].append(exc.__str__())
+            except Exception as exc:
+                res['errors'].append(exc.__str__)
+                continue
+            
+            if 'content-type' not in resp.headers.keys():
+                res['errors'].append('Key not found for {}'.format(url_k))
+                continue
+                
+            links_rows[col_name][url_k]['resp_code'] = unicode(resp.status_code)
+            links_rows[col_name][url_k]['resp_type'] = resp.headers["content-type"]
+                
+            if not resp.headers['content-type'] in allowed_img_types:                
+                continue
+            
+            f_name = os.path.basename(url_k)
+            posn_last_dot = f_name.rfind('.')
+            if posn_last_dot == -1:
+                posn_last_dot = len(f_name) - 1
+            im = Image.open(StringIO(resp.content))    
+            (width, height ) = im.size
+            #Create thumbnails based on size
+            if height > 100 or width > 400: #It's too big, make a thumbnail.
+                im.thumbnail(size)
+            
+                
+            try:
+                if resp.headers['content-type'] == 'image/gif':
+                    ext = 'gif'
+                    thumb_fname = f_name[:posn_last_dot] + '_thumb.' + ext
+                    thumb_fname = remove_bad_chars2(thumb_fname)
+                    thumb_f = os.path.join(output_dir, thumb_fname)
+                    im.save(thumb_f, "GIF")
+                    links_rows[col_name][url_k]['thumb_name'] = thumb_fname
+                else:       
+                    ext = 'jpg'
+                    thumb_fname = f_name[:posn_last_dot] + '_thumb.' + ext
+                    thumb_fname = remove_bad_chars2(thumb_fname)
+                    thumb_f = os.path.join(output_dir, thumb_fname)
+                    
+                    print(thumb_f)
+                    im.save(thumb_f, "JPEG")
+                    links_rows[col_name][url_k]['thumb_name'] = thumb_fname
+            except IOError as exc:
+                res['errors'].append(
+                    'Cannot create thumbnail for {}. Error: {}'.format(im, 
+                    exc.__str__()))
+                    
+
     res['links_rows'] = links_rows
     return res
+    

@@ -55,18 +55,44 @@ class Tester(unittest.TestCase):
      #       print(len(v.keys()))
             
        
-    def test_try_each_link(self):
+    #def test_try_each_link(self):
+    #    path_to_f = os.path.join(self.dest_dir, 'test_f_an_v2.txt')
+    #    cols_to_check = ['PXT1_GROUP', 'PXT2_GROUP']
+    #    prefix = ''
+    #    links_rows = read_csv_file(path_to_f, '|', cols_to_check, prefix)
+        
+        #res = try_each_link(links_rows)
+     #   links_rows = res['links_rows']
+     #   for k, v in links_rows.items():
+            #print('****\n{}: ' .format(k))  
+     #       for url_k, url_v in v.items():
+                #print('\t{}: {}\n******'.format(url_k, url_v))
+                
+                
+    def test_try_each_link2(self):
         path_to_f = os.path.join(self.dest_dir, 'test_f_an_v2.txt')
-        cols_to_check = ['PXT1_GROUP', 'PXT2_GROUP']
-        prefix = ''
+        cols_to_check = ['PXT1_GROUP']
+        prefix = 'https://flybuys-permissionnzltd.netdna-ssl.com/partners/'
         links_rows = read_csv_file(path_to_f, '|', cols_to_check, prefix)
         
-        res = try_each_link(links_rows)
+        res = try_each_link(links_rows, self.dest_dir)
         links_rows = res['links_rows']
-        for k, v in links_rows.items():
-            print('****\n{}: ' .format(k))  
-            for url_k, url_v in v.items():
-                print('\t{}: {}\n******'.format(url_k, url_v))
+        
+        #for k, v in links_rows.items():
+        
+        #    print('****\n{}: ' .format(k))  
+         #   for url_k, url_v in v.items():
+          #      print('\t{}: {}\n******'.format(url_k, url_v))
+          
+        #for col_name, url_info in links_rows.items():
+        #    for url_k, url_dic in url_info.items():
+        #        print(url_k)
+        print(links_rows)
+
+        if len(res['errors']) > 0:
+            for err in res['errors']:
+                print(err)
+
 
     #    def test_(self):
   

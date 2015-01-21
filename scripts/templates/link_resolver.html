@@ -47,7 +47,13 @@
         {% for url_k, url_v in link_dic.items %}
         
         <tr>
-            <td class="w400">{{ url_k }}</td>
+            <td class="w400">
+            
+            <img src="http://{{host_ref}}{{ dest_dir }}/thumbs/{{ url_v.thumb_name }}" />
+            <br>
+            {{ url_k }}
+            
+            </td>
             <td>{{ url_v.resp_code }} 
             {% if url_v.resp_code = "200" %}
                 <img src="{% static 'scripts/img/tick_20h.png' %}" alt="200" />

@@ -69,15 +69,17 @@ def link_resolver_confirm(request):
         elif request.POST['urlPrefixY'] == 'y' and (
             len(request.POST['urlPrefix']) > 0):
             resp['url_prefix'] = request.POST['urlPrefix']
-            
+        
+        resp['host_ref'] = settings.HOST_REF    
         resp['links_rows'] = read_csv_file(resp['path_to_f'], resp['separator'], 
             resp['cols_to_check'], resp['url_prefix'])
         
 
-        res = try_each_link(resp['links_rows'])
+        res = try_each_link(resp['links_rows'], settings.MEDIA_ROOT)
         if len(res['errors']) > 0:
             resp['errors'] += res['errors']
         resp['links_rows'] = res['links_rows']
+        resp['dest_dir'] = res['dest_dir']
             
         if len(resp['errors']) > 0:
             return render(request, 'link_resolver_confirm.html', resp)
