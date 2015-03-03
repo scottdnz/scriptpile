@@ -1,0 +1,7 @@
+
+use scriptpile;
+
+create table secret (
+id int auto_increment not null primary key,
+label varchar(255) not null,
+encrypted_val varchar(255) not null);

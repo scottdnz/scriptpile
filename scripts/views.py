@@ -6,6 +6,7 @@ from django.conf import settings
 from scripts.lib.alt_text_grabber import handle_uploaded_f
 from scripts.lib.link_resolver import (handle_link_f, read_csv_file, 
     try_each_link)
+from scripts.lib.basic_db_access import connect_to_db, insert_vals, encrypt_val
 
 
 #def index(request):
@@ -124,3 +125,37 @@ def file_uploader(request):
             except Exception as exc:
                 resp['result'] = 'bad, ' + exc.__str__()    
         return render_to_response('file_uploader_confirm.html', resp)
+        
+        
+def store_encrypted(request):
+    resp = {'result': 'good'}
+    if request.method == 'GET':
+        return render(request, 'store_encrypted.html')
+    elif request.method == 'POST':
+        resp = {'result': 'good'}
+        compulsory_keys = ('label', 'plainValue')
+        for ck in compulsory_keys:
+            if not request.POST.has_key(ck):
+                resp['result'] = 'bad'
+        if not resp['result'] == 'good':
+            return render_to_response('store_encrypted.html', resp)
+            
+        label = request.POST.get('label')
+        plain_val = request.POST.get('plainValue')
+        res = connect_to_db(username='scriptuser', password='password', 
+            database='scriptpile')
+        if len(res['error']) > 0:
+            resp['result'] = res['error']
+    	else:
+            con = res['db_conn']
+            insert_vals(res['db_conn'], label, plain_val, settings.ENCR_KEY, 
+            settings.ENCR_IV)       
+            
+            resp['result'] = 'Success'
+        return render_to_response('store_encrypted.html', resp)          
+            
+            
+                        
+        
+        request.POST.get('longText')
+  
