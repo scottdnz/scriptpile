@@ -3,10 +3,13 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 #from django.http import HttpResponse
 
+import logging
+
 from scripts.lib.alt_text_grabber import handle_uploaded_f
 from scripts.lib.link_resolver import (handle_link_f, read_csv_file, 
     try_each_link)
-from scripts.lib.basic_db_access import connect_to_db, insert_vals, encrypt_val
+from scripts.lib.basic_db_access import (connect_to_db, insert_secret_vals, 
+    encrypt_val)
 
 
 #def index(request):
@@ -129,27 +132,36 @@ def file_uploader(request):
         
 def store_encrypted(request):
     resp = {'result': 'good'}
+    logger = logging.getLogger(__name__)
+    
     if request.method == 'GET':
         return render(request, 'store_encrypted.html')
     elif request.method == 'POST':
         resp = {'result': 'good'}
+        #Check all keys are present
         compulsory_keys = ('label', 'plainValue')
         for ck in compulsory_keys:
             if not request.POST.has_key(ck):
                 resp['result'] = 'bad'
         if not resp['result'] == 'good':
             return render_to_response('store_encrypted.html', resp)
-            
+        # Get form field vals    
         label = request.POST.get('label')
         plain_val = request.POST.get('plainValue')
-        res = connect_to_db(username='scriptuser', password='password', 
-            database='scriptpile')
+        
+        
+        #res = connect_to_db(username='scriptuser', password='password', 
+#            database='scriptpile')
+            
+        res = connect_to_db(username=settings.DATABASES['default']['USER'], 
+        password=settings.DATABASES['default']['PASSWORD'], 
+            database=settings.DATABASES['default']['NAME'])            
+            
         if len(res['error']) > 0:
             resp['result'] = res['error']
-    	else:
-            con = res['db_conn']
-            insert_vals(res['db_conn'], label, plain_val, settings.ENCR_KEY, 
-            settings.ENCR_IV)       
+        else:
+            insert_secret_vals(res['db_conn'], label, plain_val, 
+            settings.ENCR_KEY, settings.ENCR_IV, logger)       
             
             resp['result'] = 'Success'
         return render_to_response('store_encrypted.html', resp)          
