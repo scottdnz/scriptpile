@@ -1,15 +1,18 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.conf import settings
-#from django.http import HttpResponse
+from django.http import HttpResponse
+from apiclient.discovery import build
 
-import logging
+import logging, json
 
 from scripts.lib.alt_text_grabber import handle_uploaded_f
 from scripts.lib.link_resolver import (handle_link_f, read_csv_file, 
     try_each_link)
 from scripts.lib.basic_db_access import (connect_to_db, insert_secret_vals, 
-    encrypt_val)
+    encrypt_val, decrypt_val)
+from scripts.lib.google_search import (get_api_keys, get_req_result_set, 
+search_google)
 
 
 #def index(request):
@@ -90,7 +93,53 @@ def link_resolver_confirm(request):
         else:    
             return render(request, 'link_resolver.html', resp)
         
-                
+        
+def gsearch(request):
+    if request.method == 'GET':
+        return render(request, 'gsearch_form.html')
+        
+        
+def gsearch_requester(request):
+    if request.method == 'POST':
+        data = {"results": []}
+        
+        #print(request.META.get('CONTENT_TYPE'))
+        #print(request.POST)
+        rec_json_data=json.loads(request.body)
+        search_terms = rec_json_data['search_terms']
+        start_val = int(rec_json_data['start_val'])
+        #print(rec_json_data['search_terms'])
+        
+        res = connect_to_db(username=settings.DATABASES['default']['USER'], 
+        password=settings.DATABASES['default']['PASSWORD'], 
+        database=settings.DATABASES['default']['NAME'])
+        # Get Google API keys from the DB & unencrypt them
+        project_lbl = 'custom search engine1'
+        api_lbl = 'testSearch1 Project - api key'
+        api_keys = get_api_keys(res['db_conn'], project_lbl, api_lbl)
+        #print(api_keys)
+        api_keys['project_key'] = decrypt_val(api_keys['project_key'], 
+           settings.ENCR_KEY, settings.ENCR_IV)
+        api_keys['api_key'] = decrypt_val(api_keys['api_key'],
+           settings.ENCR_KEY, settings.ENCR_IV)
+    
+        info = {'search_text': search_terms,
+        'num_requests': 10,
+        'search_engine_id': api_keys['project_key'],
+        'api_key': api_keys['api_key']
+        }
+        
+        results = []
+        service = build('customsearch', 'v1', developerKey=info['api_key'])
+        collection = service.cse()
+        # This is the offset from the beginning to start getting the results from
+        #start_val = 1 + (i * 10)
+        data["results"].append(get_req_result_set(collection, start_val, info))
+        
+        
+        
+        return HttpResponse(json.dumps(data), content_type='application/json')
+        
         
         
 def link_resolver(request):
@@ -165,9 +214,3 @@ def store_encrypted(request):
             
             resp['result'] = 'Success'
         return render_to_response('store_encrypted.html', resp)          
-            
-            
-                        
-        
-        request.POST.get('longText')
-  

@@ -13,27 +13,26 @@ from scripts.lib.google_search import *
 
 
 if __name__ == '__main__':	
-	res = connect_to_db(username=settings.DATABASES['default']['USER'], 
-	password=settings.DATABASES['default']['PASSWORD'], 
-	database=settings.DATABASES['default']['NAME'])
-	
-	project_lbl = 'custom search engine1'
-	api_lbl = 'testSearch1 Project - api key'
-	api_keys = get_api_keys(res['db_conn'], project_lbl, api_lbl)
-	
-	#print(api_keys)
-	api_keys['project_key'] = decrypt_val(api_keys['project_key'], 
-	   settings.ENCR_KEY, settings.ENCR_IV)
-	api_keys['api_key'] = decrypt_val(api_keys['api_key'],
-	   settings.ENCR_KEY, settings.ENCR_IV)
-	
-	
-	info = {'search_text': 'Auckland Hairdresser',
-    'num_requests': 1,
+    res = connect_to_db(username=settings.DATABASES['default']['USER'], 
+    password=settings.DATABASES['default']['PASSWORD'], 
+    database=settings.DATABASES['default']['NAME'])
+    # Get Google API keys from the DB & unencrypt them
+    project_lbl = 'custom search engine1'
+    api_lbl = 'testSearch1 Project - api key'
+    api_keys = get_api_keys(res['db_conn'], project_lbl, api_lbl)
+    #print(api_keys)
+    api_keys['project_key'] = decrypt_val(api_keys['project_key'], 
+       settings.ENCR_KEY, settings.ENCR_IV)
+    api_keys['api_key'] = decrypt_val(api_keys['api_key'],
+       settings.ENCR_KEY, settings.ENCR_IV)
+
+    info = {'search_text': 'Auckland Hairdresser',
+    'num_requests': 2,
     'search_engine_id': api_keys['project_key'],
     'api_key': api_keys['api_key']
     }
-        search_google(info)
+    search_google(info)
+    
     
         
     

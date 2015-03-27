@@ -1,0 +1,69 @@
+<html>
+    <head>
+        <title>Google Search Form</title>
+        {% load staticfiles %}      
+        <link rel="stylesheet" type="text/css" href="{% static 'scripts/css/common.css' %}" />
+        <script type="text/javascript" src="{% static 'scripts/js/jquery-1.11.2.js' %}"></script>
+        <script type="text/javascript" src="{% static 'scripts/js/gsearch.js' %}"></script>
+    </head>
+    
+    <body>
+    
+    <div id="pMain" class="h800">
+    
+    <div id="topLine">
+        <div id="leftTop" class="fLeft">
+            <h1>Google Search</h1>
+        </div>
+    
+        <div id="rightTop" class="fRight">
+            <a href="/scriptpile/scripts/">
+            <img src="{% static 'scripts/img/home_24_24.png' %}" alt="home" />
+            </a>
+        </div>
+    
+    </div>
+    
+    <div id="secMain">
+    
+    <form>
+        
+        <p>
+            <span class="lbl">Search term(s)</span>
+            <span class="field"><input type="text" name="searchTerms" id="searchTerms" size="40">
+            </span>
+        </p>
+        
+         <p>
+            <span class="lbl">Number of results wanted</span>
+            <span class="field">
+                <select name="numResults" id="numResults">
+                    
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                        <option value="60">60</option>
+                        <option value="70">70</option>
+                        <option value="80">80</option>
+                        <option value="90">90</option>
+                        <option value="100">100</option>
+                    
+                </select>
+            </span>
+        </p>        
+        
+        <br><br>
+        <button type="button" value="Search Google" name="btnSubmit" id="btnSubmit">Search Google</button>
+{% csrf_token %} 
+    </form>
+    
+    <div id="resultsArea"></div>
+    
+    </div>
+    
+    </div>
+    
+    </body>
+</html>
