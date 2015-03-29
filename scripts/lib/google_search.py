@@ -16,10 +16,12 @@ def get_api_keys(conn, project_lbl, api_lbl):
     }
     sql = 'select label, encrypted_val from secret where label in ("{}", "{}");'
     sql = sql.format(project_lbl, api_lbl)
+    #print(sql)
     cur = conn.cursor()
     cur.execute(sql)
     
-    row = cur.fetchone()
+    row = cur.fetchone()  
+    
     if row[0] == project_lbl:
         api_keys['project_key'] = row[1]
     elif row[0] == api_lbl:
