@@ -42,7 +42,7 @@
             <br>
             {{ image.f_name }}</td>
             <td>{{ image.alt_text }}</td>
-            <td>{{ image.location}}</td>
+            <td>{{ image.location|truncatechars:100 }}</td>
         </tr>
         {% endfor %}
     </table>
