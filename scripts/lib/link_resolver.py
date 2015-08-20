@@ -185,14 +185,20 @@ def try_each_link(links_rows, media_root):
                     thumb_f = os.path.join(output_dir, thumb_fname)
                     im.save(thumb_f, "GIF")
                     links_rows[col_name][url_k]['thumb_name'] = thumb_fname
-                else:       
+                elif resp.headers['content-type'] in ('image/jpeg', 'image.jpg'):       
                     ext = 'jpg'
                     thumb_fname = f_name[:posn_last_dot] + '_thumb.' + ext
                     thumb_fname = remove_bad_chars2(thumb_fname)
                     thumb_f = os.path.join(output_dir, thumb_fname)
-                    
-                    print(thumb_f)
+                    #print(thumb_f)
                     im.save(thumb_f, "JPEG")
+                    links_rows[col_name][url_k]['thumb_name'] = thumb_fname
+                elif resp.headers['content-type'] == 'image/png':
+                    ext = 'PNG'
+                    thumb_fname = f_name[:posn_last_dot] + '_thumb.' + ext
+                    thumb_fname = remove_bad_chars2(thumb_fname)
+                    thumb_f = os.path.join(output_dir, thumb_fname)
+                    im.save(thumb_f, "PNG")
                     links_rows[col_name][url_k]['thumb_name'] = thumb_fname
             except IOError as exc:
                 res['errors'].append(
