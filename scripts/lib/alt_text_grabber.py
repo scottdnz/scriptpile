@@ -43,7 +43,7 @@ def handle_uploaded_f(media_root, f):
     full_path = media_root + '/' + f.name
     dest_dir = os.path.join(media_root,  'job_' + now_sfx)
     try:
-            #Copy the zip file container
+        #Copy the zip file container
         with open(full_path, 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
@@ -191,6 +191,13 @@ def make_thumbnails_for_html_f(img_list, dest_dir):
                         thumb_f = os.path.join(output_dir, thumb_fname)
                         im.save(thumb_f, "GIF")
                         img_list[i]['thumb_name'] = thumb_fname
+                    elif resp.headers['content-type'] == 'image/png':
+                        ext = 'png'
+                        thumb_fname = img_list[i]['f_name'][:posn_last_dot] + '_thumb.' + ext
+                        thumb_fname = remove_bad_chars(thumb_fname)
+                        thumb_f = os.path.join(output_dir, thumb_fname)
+                        im.save(thumb_f, "PNG")
+                        img_list[i]['thumb_name'] = thumb_fname
                     else:       
                         ext = 'jpg'
                         thumb_fname = img_list[i]['f_name'][:posn_last_dot] + '_thumb.' + ext
@@ -200,8 +207,7 @@ def make_thumbnails_for_html_f(img_list, dest_dir):
                         img_list[i]['thumb_name'] = thumb_fname
                 except IOError as exc:
                     res['errors'].append(
-                        'Cannot create thumbnail for {}. Error: {}'.format(img, 
-                        exc.__str__()))
+                        'Cannot create thumbnail. Error: {}'.format(exc.__str__()))
                                         
         else:    
             #This is a path to a local resource
