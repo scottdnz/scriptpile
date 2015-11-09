@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <title>Email Hasher</title>
+        {% load staticfiles %}      
+        <link rel="stylesheet" type="text/css" href="{% static 'scripts/css/common.css' %}" />
+    
+    </head>
+    
+    <body>
+    
+    <div id="pMain" class="h800">
+    
+    <div id="topLine">
+        <div id="leftTop" class="fLeft">
+            <h1>Email Hasher</h1>
+        </div>
+    
+        <div id="rightTop" class="fRight">
+            <a href="/scriptpile/scripts/">
+            <img src="{% static 'scripts/img/home_24_24.png' %}" alt="home" />
+            </a>
+        </div>
+    
+    </div>
+    
+    <div id="secMain">
+    
+    <form action="email_hasher" method="POST" enctype="multipart/form-data">
+        
+        <p>
+            <span class="lbl">Select the file to upload: </span>
+            <span class="field"><input type="file" name="fileToUpload" id="fileToUpload">
+            </span>
+        </p>
+        <br><br>
+        <input type="submit" value="Upload File" name="submit">
+        {% csrf_token %} 
+    </form>
+    
+    
+    </div>
+    
+    </div>
+    
+    </body>
+</html>

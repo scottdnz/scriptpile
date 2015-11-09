@@ -4,7 +4,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from apiclient.discovery import build
 
-import logging, json
+import logging, json, csv
 
 from scripts.lib.alt_text_grabber import handle_uploaded_f
 from scripts.lib.link_resolver import (handle_link_f, read_csv_file, 
@@ -13,6 +13,7 @@ from scripts.lib.basic_db_access import (connect_to_db, insert_secret_vals,
     encrypt_val, decrypt_val)
 from scripts.lib.google_search import (get_api_keys, get_req_result_set, 
 search_google)
+from scripts.lib.email_hasher import handle_uploaded_email_f
 
 
 #def index(request):
@@ -214,3 +215,32 @@ def store_encrypted(request):
             
             resp['result'] = 'Success'
         return render_to_response('store_encrypted.html', resp)          
+
+
+def email_hasher(request):
+    if request.method == 'GET':
+        return render(request, 'email_hasher.html')
+    elif request.method == 'POST':
+        if request.FILES.has_key('fileToUpload'):
+            resp = handle_uploaded_email_f(settings.MEDIA_ROOT, 
+                request.FILES['fileToUpload'])
+            resp['host_ref'] = settings.HOST_REF 
+        else:
+            pass
+        return render_to_response('email_hasher_confirm.html', resp)
+
+
+def email_hasher_return_encrypted_file(request):
+    # Create the HttpResponse object with the appropriate CSV header.
+    f_name = settings.MEDIA_ROOT + '/' +  request.GET['fldr'] + '/encrypted_emails.csv'
+    f = open(f_name, 'rb')
+    enc_emails = f.readlines()
+    f.close()
+    response = HttpResponse(content_type='text/csv')
+    writer = csv.writer(response)
+    writer.writerows([[enc_email.strip()] for enc_email in enc_emails])
+    
+    #print('filename="{}/encrypted_emails.csv"'.format(fldr))
+    response['Content-Disposition'] = 'attachment; filename="encrypted_emails.csv"'
+    
+    return response

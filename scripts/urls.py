@@ -13,6 +13,8 @@ urlpatterns = patterns('',
     url(r'^file_uploader$', views.file_uploader, name='file_uploader'),
     url(r'^store_encrypted$', views.store_encrypted, name='store_encrypted'),
     url(r'^gsearch$', views.gsearch, name='gsearch'),
-    url(r'^gsearch_requester$', views.gsearch_requester, name='gsearch_requester')
+    url(r'^gsearch_requester$', views.gsearch_requester, name='gsearch_requester'),
+    url(r'^email_hasher$', views.email_hasher, name='email_hasher'),
+    url(r'^email_hasher_return_encrypted_file$', views.email_hasher_return_encrypted_file, name='email_hasher_return_encrypted_file'),
     #url(r'^scriptpile/scripts$', views.index, name='index')
 )
